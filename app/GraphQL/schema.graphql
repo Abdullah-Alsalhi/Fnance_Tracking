@@ -1,0 +1,21 @@
+
+   Nuwave\Lighthouse\Exceptions\DefinitionException 
+
+  Lighthouse failed while trying to load a type: Item
+
+Make sure the type is present in your schema definition.
+
+  at vendor/nuwave/lighthouse/src/Schema/TypeRegistry.php:109
+    105▕      */
+    106▕     public function get(string $name): Type
+    107▕     {
+    108▕         if (! $this->has($name)) {
+  ➜ 109▕             throw new DefinitionException(
+    110▕                 <<<EOL
+    111▕ Lighthouse failed while trying to load a type: $name
+    112▕ 
+    113▕ Make sure the type is present in your schema definition.
+
+      [2m+29 vendor frames [22m
+  30  artisan:37
+      Illuminate\Foundation\Console\Kernel::handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))

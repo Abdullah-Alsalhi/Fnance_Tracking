@@ -20,12 +20,21 @@ type Brand {
     category: Category @belongsTo
 }
 
+type Item {
+  id: ID!
+  name: String!
+  brand: Brand!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
 type Transaction {
     id: ID!
     amount: Float!
     brand: Brand! @belongsTo
     created_at: Date!
     note: String
+    item: Item! @belongsTo
 }
 
 type Sms {
@@ -45,6 +54,12 @@ type Query {
     brands: [Brand!]!
         @paginate(defaultCount: 25)
         @lazyLoad(relations: ["category"])
+        @orderBy(column: id direction: DESC)
+
+    allItems: [Item!]! @all
+    items: [Item!]!
+        @paginate(defaultCount: 25)
+        @lazyLoad(relations: ["brand"])
         @orderBy(column: id direction: DESC)
 
     allCategories: [Category!]! @all
@@ -87,6 +102,7 @@ type Mutation {
         brand_id: Int!
         created_at: String!
         note: String
+        item_id: Int!
     ): Transaction @create
     updateTransaction(
         id: ID!
@@ -94,6 +110,7 @@ type Mutation {
         brand_id: Int!
         created_at: String!
         note: String
+        item_id: Int!
     ): Transaction @update
     deleteTransaction(id: ID!): Transaction @delete
 

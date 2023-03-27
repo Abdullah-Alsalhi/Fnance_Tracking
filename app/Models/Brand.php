@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Brand extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
 
     protected static function booted()
@@ -16,6 +16,11 @@ class Brand extends Model
         static::deleted(function ($brand) {
             $brand->transactions()->delete();
         });
+    }
+
+    public function items()
+    {
+        return $this->hasMany(Item::class);
     }
 
     public function category()
@@ -31,8 +36,8 @@ class Brand extends Model
     public static function findOrCreateNew($name)
     {
         // TODO: find better solution for detecting brands maybe using SQL query?
-        foreach(static::get() as $knownBrand) {
-            if(str_contains(strtolower($name), strtolower($knownBrand->name))) {
+        foreach (static::get() as $knownBrand) {
+            if (str_contains(strtolower($name), strtolower($knownBrand->name))) {
                 return $knownBrand;
             }
         }

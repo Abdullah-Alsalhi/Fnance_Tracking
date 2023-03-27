@@ -8,12 +8,13 @@ import Create from './Create';
 import LoadMore from '@/Components/Global/LoadMore';
 import Button from '@/Components/Global/Button';
 import Delete from '@/Components/Domain/Delete';
-import { getTransactions, getAllBrands } from '@/Api';
+import { getTransactions, getAllBrands, getAllItems } from '@/Api';
 import { animateRowItem, formatNumber } from '@/Utils';
 
-export default function Index({auth}) {
+export default function Index({ auth }) {
     const [transactions, setTransactions] = useState([]);
     const [allBrands, setAllBrands] = useState([]);
+    const [allItems, setAllItems] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMorePages, setHasMorePages] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -23,18 +24,27 @@ export default function Index({auth}) {
 
     useEffect(() => {
         getAllBrands()
-            .then(({data}) => {
+            .then(({ data }) => {
                 setAllBrands(data.allBrands)
             })
             .catch(console.error);
     }, []);
 
     useEffect(() => {
-        if(! hasMorePages) return;
+        getAllItems()
+            .then(({ data }) => {
+                setAllItems(data.allItems)
+            })
+            .catch(console.error);
+    }, []);
+
+    useEffect(() => {
+        if (!hasMorePages) return;
         setLoading(true);
 
         getTransactions(currentPage)
-            .then(({data}) => {
+            .then(({ data }) => {
+                console.log(data)
                 setTransactions([...transactions, ...data.transactions.data])
                 setHasMorePages(data.transactions.paginatorInfo.hasMorePages)
                 setLoading(false);
@@ -51,7 +61,7 @@ export default function Index({auth}) {
 
     const onUpdate = (updatedItem) => {
         setTransactions(transactions.map(transaction => {
-            if(transaction.id === updatedItem.id) {
+            if (transaction.id === updatedItem.id) {
                 return updatedItem
             }
 
@@ -85,6 +95,7 @@ export default function Index({auth}) {
 
             <Create showCreate={showCreate}
                 brands={allBrands}
+                items={allItems} // i added this
                 onCreate={onCreate}
                 onClose={() => setShowCreate(false)} />
 
@@ -97,7 +108,7 @@ export default function Index({auth}) {
             <Delete item={deleteItem}
                 resource="Transaction"
                 onClose={() => setDeleteItem(null)}
-                onDelete={onDelete}  />
+                onDelete={onDelete} />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -168,10 +179,11 @@ export default function Index({auth}) {
                             </div>
                         </div>}
 
-                        <LoadMore hasContent={transactions.length > 0} hasMorePages={hasMorePages} loading={loading} onClick={() => setCurrentPage(currentPage+1)} />
+                        <LoadMore hasContent={transactions.length > 0} hasMorePages={hasMorePages} loading={loading} onClick={() => setCurrentPage(currentPage + 1)} />
                     </div>
                 </div>
             </div>
         </Authenticated>
     );
 }
+

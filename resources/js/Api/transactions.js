@@ -3,7 +3,7 @@ import client from './client.js';
 
 export const getTransactions = (page) => {
     return client
-            .query(gql`
+        .query(gql`
                 query {
                     transactions(page: ${page}) {
                         data {
@@ -27,14 +27,39 @@ export const getTransactions = (page) => {
                     }
                 }
             `)
-            .toPromise();
+        .toPromise();
 }
 
-export const createTransaction = ({amount, brandId, createdAt, note}) => {
+export const createTransaction = ({ amount, brandId, createdAt, note, itemId }) => {
     return client
         .mutation(gql`
             mutation {
-                createTransaction(amount: ${amount} brand_id: ${brandId} created_at: """${createdAt}""" note: """${note}""") {
+                createTransaction(amount: ${amount} brand_id: ${brandId} created_at: """${createdAt}""" note: """${note}""" item_id: ${1}) {
+                    id
+                    amount
+                    created_at
+                    note
+                    brand {
+                        id
+                        name
+                        category {
+                            id
+                            name
+                            type
+                            color
+                        }
+                    }
+                }
+            }
+        `)
+        .toPromise();
+}
+
+export const updateTransaction = ({ id, amount, brandId, createdAt, note, itemId }) => {
+    return client
+        .mutation(gql`
+            mutation {
+                updateTransaction(id: ${id} amount: ${amount} brand_id: ${brandId} created_at: """${createdAt}""" note: """${note}""" item_id: ${itemId}) {
                     id
                     amount
                     created_at
@@ -47,28 +72,9 @@ export const createTransaction = ({amount, brandId, createdAt, note}) => {
                             type
                         }
                     }
-                }
-            }
-        `)
-        .toPromise();
-}
-
-export const updateTransaction = ({id, amount, brandId, createdAt, note}) => {
-    return client
-        .mutation(gql`
-            mutation {
-                updateTransaction(id: ${id} amount: ${amount} brand_id: ${brandId} created_at: """${createdAt}""" note: """${note}""") {
-                    id
-                    amount
-                    created_at
-                    note
-                    brand {
+                    item {
                         id
                         name
-                        category {
-                            name
-                            type
-                        }
                     }
                 }
             }
