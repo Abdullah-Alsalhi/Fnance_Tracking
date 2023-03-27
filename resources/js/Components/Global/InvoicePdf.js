@@ -62,7 +62,7 @@ const Invoice = (props) => (
                 <Text style={styles.heading}>Invoice</Text>
                 <View style={styles.section}>
                     {/* <Text style={[styles.label, { textAlign: 'center' }]}>Company:</Text> */}
-                    <Text style={[styles.value, { textAlign: 'center' }]}>{'FINANCE'}</Text>
+                    <Text style={[styles.value, { textAlign: 'center' }]}>{'💰 FINANCE 💰'}</Text>
                 </View>
                 <View style={styles.section}>
                     <Text style={styles.label}>User:</Text>
